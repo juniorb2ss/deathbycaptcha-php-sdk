@@ -1,0 +1,5 @@
+watch:
+  directories:
+    - src
+    - tests
+  fileMask: '*.php'
