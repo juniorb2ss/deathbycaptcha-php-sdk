@@ -11,5 +11,4 @@ namespace juniorb2ss\DeathByCaptcha\Exceptions;
  */
 class AccessDeniedException extends ClientException
 {
-
 }

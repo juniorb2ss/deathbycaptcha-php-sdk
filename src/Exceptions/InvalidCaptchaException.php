@@ -10,5 +10,4 @@ namespace juniorb2ss\DeathByCaptcha\Exceptions;
  */
 class InvalidCaptchaException extends ClientException
 {
-
 }

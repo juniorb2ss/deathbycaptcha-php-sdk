@@ -9,7 +9,7 @@ use juniorb2ss\DeathByCaptcha\Exceptions\InvalidResponseAttributeException;
 
 abstract class ServiceAbstract implements ServiceInterface
 {
-     /**
+    /**
      * [setResponse description]
      * @param Response $response [description]
      */
