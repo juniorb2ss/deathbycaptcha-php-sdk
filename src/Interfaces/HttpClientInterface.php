@@ -8,4 +8,5 @@ interface HttpClientInterface
 {
     public function accountRequest(): Response;
     public function statusRequest(): Response;
+    public function captchAsIncorrect(int $id): Response;
 }

@@ -7,38 +7,46 @@ use juniorb2ss\DeathByCaptcha\Tests\TestCase;
 
 class StatusServiceTest extends TestCase
 {
+    protected $contentToHttpResponse = 'api/status.json';
+
     public function setUp()
     {
         parent::setUp();
-        $this->expectedReturn = [
-            'status' => 0,
-            'todays_accuracy' => 0.97337,
-            'solved_in' => 9,
-            'is_service_overloaded' => false
-        ];
-        $service = $this->mock('api/status.json');
-        $this->status = $service->status();
+
+        $this->status = $this->service->status();
     }
 
     public function testStatus()
     {
-        $this->assertEquals((bool)0, $this->status->status());
+        $expected = (int)$this->expectedReturn['status'];
+        $actual = $this->status->status();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testTodaysAccuracy()
     {
-        $this->assertEquals((float)0.97337, $this->status->todaysAccuracy());
+        $expected = (float)$this->expectedReturn['todays_accuracy'];
+        $actual = $this->status->todaysAccuracy();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testSolvedIn()
     {
-        $this->assertEquals((int)9, $this->status->solvedIn());
+        $expected = (int)$this->expectedReturn['solved_in'];
+        $actual = $this->status->solvedIn();
+
+        $this->assertEquals($expected, $actual);
     }
 
 
     public function testIsServiceOverloaded()
     {
-        $this->assertEquals(false, $this->status->isServiceOverloaded());
+        $expected = (bool)$this->expectedReturn['is_service_overloaded'];
+        $actual = $this->status->isServiceOverloaded();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testStatusToArray()

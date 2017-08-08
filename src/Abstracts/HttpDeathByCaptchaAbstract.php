@@ -43,6 +43,22 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
         return $response;
     }
 
+    protected function post(string $path, array $query = [], array $headers = []): Response
+    {
+        $query = $this->getQueryForClientRequest($query);
+        $headers = $this->getHeadersForClientRequest($headers);
+
+        $options = array_merge(['form_params' => $query], $this->getClientOptions($headers));
+        $response = $this->client->request('POST', static::API_URL . $path, $options);
+        $responseContentType = $response->getHeaderLine('Content-Type');
+
+        if ($responseContentType !== 'application/json') {
+            throw new InvalidServiceResponseTypeException;
+        }
+
+        return $response;
+    }
+
     /**
      * [getHeadersForClientRequest description]
      * @param  array  $headers [description]
@@ -116,6 +132,43 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     public function statusRequest(): Response
     {
         $response = $this->get('status');
+
+        return $response;
+    }
+
+    /**
+     * [statusRequest description]
+     * @return [type] [description]
+     */
+    public function captchAsIncorrect(int $id): Response
+    {
+        $response = $this->post("captcha/{$id}/report");
+
+        return $response;
+    }
+
+    /**
+     * [retrieveCaptcha description]
+     * @param  int    $id [description]
+     * @return [type]     [description]
+     */
+    public function retrieveCaptcha(int $id): Response
+    {
+        $response = $this->get("captcha/{$id}");
+
+        return $response;
+    }
+
+    /**
+     * [uploadCaptcha description]
+     * @param  [type] $imageBase64 [description]
+     * @return [type]              [description]
+     */
+    public function uploadCaptcha($imageBase64): Response
+    {
+        $response = $this->post('captcha', [
+            'captchafile' => $imageBase64
+        ]);
 
         return $response;
     }

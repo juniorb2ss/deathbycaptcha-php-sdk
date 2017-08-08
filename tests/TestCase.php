@@ -15,7 +15,18 @@ use Mockery;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function mock(string $contentToBody = '{}', callable $handlerResponse = null)
+    protected $contentToHttpResponse = '{}';
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $expectedApiResponse = $this->getStubContent($this->contentToHttpResponse);
+        $this->expectedReturn = json_decode($expectedApiResponse, true);
+        $this->service = $this->mock($expectedApiResponse);
+    }
+
+    public function mock(string $contentToBody, callable $handlerResponse = null)
     {
         $httpClientMock = $this->clientMock($contentToBody, $handlerResponse);
 
@@ -35,10 +46,8 @@ abstract class TestCase extends BaseTestCase
         }));
     }
 
-    protected function clientMock(string $contentToBody, callable $handlerResponse = null)
+    protected function clientMock(string $body, callable $handlerResponse = null)
     {
-        $body = $this->getStubContent($contentToBody);
-
         $response = new MockHandler([
             new GuzzleResponse(200, ['Content-Type' => 'application/json'], $body)
         ]);

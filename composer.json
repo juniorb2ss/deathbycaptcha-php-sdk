@@ -48,7 +48,7 @@
         "coverage": "phpunit --coverage-text --coverage-clover=coverage.clover",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
         "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
-        "build": "composer run test && composer run check-style && composer run fix-style && composer run coverage"
+        "build": "composer run check-style && composer run fix-style && composer run coverage"
     },
     "extra": {
         "branch-alias": {

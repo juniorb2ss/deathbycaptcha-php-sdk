@@ -7,47 +7,56 @@ use juniorb2ss\DeathByCaptcha\Interfaces\DeathByCaptchaAccountInterface;
 
 class AccountServiceTest extends TestCase
 {
+    protected $contentToHttpResponse = 'api/user.json';
+
     public function setUp()
     {
         parent::setUp();
 
-        $service = $this->mock('api/user.json');
-        $this->expectedReturn = [
-            'is_banned' => false,
-            'status' => 0,
-            'rate' => 0.139,
-            'balance' => 1232.2881,
-            'user' => 279449
-        ];
-        $this->account = $service->account();
+        $this->account = $this->service->account();
     }
 
     public function testIsBanned()
     {
-        $this->assertEquals((bool)0, $this->account->isBanned());
+        $expected = (bool)$this->expectedReturn['is_banned'];
+        $actual = $this->account->isBanned();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testGetStatus()
     {
-        $this->assertEquals((bool)0, $this->account->getStatus());
+        $expected = (bool)$this->expectedReturn['status'];
+        $actual = $this->account->getStatus();
+
+        $this->assertEquals($expected, $actual);
     }
 
 
     public function testGetRate()
     {
-        $this->assertEquals((int)0.139, $this->account->getRate());
+        $expected = (int)$this->expectedReturn['rate'];
+        $actual = $this->account->getRate();
+
+        $this->assertEquals($expected, $actual);
     }
 
 
     public function testGetBalance()
     {
-        $this->assertEquals((double)1232.2881, $this->account->getBalance());
+        $expected = (double)$this->expectedReturn['balance'];
+        $actual = $this->account->getBalance();
+
+        $this->assertEquals($expected, $actual);
     }
 
 
     public function testGetUser()
     {
-        $this->assertEquals((int)279449, $this->account->getUser());
+        $expected = (int)$this->expectedReturn['user'];
+        $actual = $this->account->getUser();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testGetToArray()

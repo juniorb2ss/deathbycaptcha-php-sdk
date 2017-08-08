@@ -2,15 +2,20 @@
 
 namespace juniorb2ss\DeathByCaptcha;
 
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Client as GuzzleClient;
-use juniorb2ss\DeathByCaptcha\Services\AccountService;
-use juniorb2ss\DeathByCaptcha\Services\StatusService;
-use juniorb2ss\DeathByCaptcha\Interfaces\StatusInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Response;
+use juniorb2ss\DeathByCaptcha\Abstracts\HttpDeathByCaptchaAbstract;
 use juniorb2ss\DeathByCaptcha\Interfaces\AccountInterface;
 use juniorb2ss\DeathByCaptcha\Interfaces\DeathByCaptchaInterface;
-use juniorb2ss\DeathByCaptcha\Abstracts\HttpDeathByCaptchaAbstract;
+use juniorb2ss\DeathByCaptcha\Interfaces\ReportInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\StatusInterface;
+use juniorb2ss\DeathByCaptcha\Services\AccountService;
+use juniorb2ss\DeathByCaptcha\Services\ImageService;
+use juniorb2ss\DeathByCaptcha\Services\ReportService;
+use juniorb2ss\DeathByCaptcha\Services\ResolverService;
+use juniorb2ss\DeathByCaptcha\Services\StatusService;
 
 class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptchaInterface
 {
@@ -47,6 +52,8 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
         $this->client = new GuzzleClient;
         $this->account = new AccountService;
         $this->status = new StatusService;
+        $this->report = new ReportService;
+        $this->resolver = new ResolverService;
     }
 
     public function setHttpClient(ClientInterface $client)
@@ -77,6 +84,38 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
         $response = $this->statusRequest();
 
         return $this->status
+                    ->setResponse($response);
+    }
+
+    /**
+     * [report description]
+     * @return [type] [description]
+     */
+    public function report(int $id): ReportInterface
+    {
+        $response = $this->captchAsIncorrect($id);
+
+        return $this->report
+                    ->setResponse($response);
+    }
+
+    /**
+     * [resolver description]
+     * @param  [type] $mix [description]
+     * @return [type]      [description]
+     */
+    public function resolver($mix): ResolverInterface
+    {
+        // If passed captcha id, retrieve captcha text
+        if (is_int($mix)) {
+            $response = $this->retrieveCaptcha($mix);
+        } else {
+            $image = ImageService::base64From($mix);
+
+            $response = $this->uploadCaptcha($image);
+        }
+
+        return $this->resolver
                     ->setResponse($response);
     }
 }
