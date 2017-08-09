@@ -8,37 +8,21 @@ use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
 
 class ResolverService extends ServiceAbstract implements ResolverInterface
 {
-    /**
-     * [isCorrect description]
-     * @return boolean [description]
-     */
     public function isCorrect(): bool
     {
         return (bool)$this->getResponseAttribute('is_correct');
     }
 
-    /**
-     * [text description]
-     * @return [type] [description]
-     */
     public function text(): string
     {
         return (string)$this->getResponseAttribute('text');
     }
 
-    /**
-     * [status description]
-     * @return [type] [description]
-     */
-    public function status(): bool
+    public function status(): int
     {
-        return (bool)$this->getResponseAttribute('status');
+        return (int)$this->getResponseAttribute('status');
     }
 
-    /**
-     * [captchaId description]
-     * @return [type] [description]
-     */
     public function captchaId(): int
     {
         return (int)$this->getResponseAttribute('captcha');

@@ -2,79 +2,108 @@
 
 namespace juniorb2ss\DeathByCaptcha\Abstracts;
 
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use juniorb2ss\DeathByCaptcha\DeathByCaptcha;
-use juniorb2ss\DeathByCaptcha\Interfaces\HttpClientInterface;
-use juniorb2ss\DeathByCaptcha\Exceptions\InvalidServiceResponseTypeException;
+use juniorb2ss\DeathByCaptcha\Exceptions\ClientException;
+use juniorb2ss\DeathByCaptcha\Interfaces\ClientInterface;
+use juniorb2ss\DeathByCaptcha\Abstracts\HttpHandlerResponseAbstract;
 
-abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
+abstract class HttpDeathByCaptchaAbstract extends HttpHandlerResponseAbstract implements ClientInterface
 {
     /**
-     * [$headers description]
-     * @var [type]
+     * Headers por padrão para requisição HTTP
+     * @var array
      */
-    protected $headers = [
+    protected $defaultHeaders = [
         'Accept' => 'application/json',
         'Expect' => '',
         'User-Agent' => DeathByCaptcha::API_VERSION
     ];
 
     /**
-     * [get description]
-     * @param  string $path    [description]
-     * @param  array  $query   [description]
-     * @param  array  $headers [description]
-     * @return [type]          [description]
+     * Create and send an HTTP request.
+     *
+     * Use an absolute path to override the base path of the client, or a
+     * relative path to append to the base path of the client. The URL can
+     * contain the query string as well.
+     *
+     * @param string              $method  HTTP method.
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
+     * @return ResponseInterface
+     * @throws GuzzleException
      */
-    protected function get(string $path, array $query = [], array $headers = []): Response
+    protected function request($method, $uri, array $options = []): ResponseInterface
+    {
+        // Handler request to client
+        $this->response = $this->client->request($method, $uri, $options);
+
+        // Handler response to check HTTP code erros
+        // and content-type and content body
+        // Make sure everything is correct before proceeding.
+        $this->handlerHttpResponseIsOk();
+
+        // all is ok!
+        return $this->response;
+    }
+
+    /**
+     * Efetua requisição GET no client
+     * @param  string $path
+     * @param  array  $query
+     * @param  array  $headers
+     * @return ResponseInterface
+     */
+    protected function get(string $path, array $query = [], array $headers = []): ResponseInterface
     {
         $query = $this->getQueryForClientRequest($query);
         $headers = $this->getHeadersForClientRequest($headers);
 
         $options = array_merge(['query' => $query], $this->getClientOptions($headers));
 
-        $response = $this->client->get(static::API_URL . $path, $options);
-        $responseContentType = $response->getHeaderLine('Content-Type');
-
-        if ($responseContentType !== 'application/json') {
-            throw new InvalidServiceResponseTypeException;
-        }
+        $response = $this->request('GET', static::API_URL . $path, $options);
 
         return $response;
     }
 
-    protected function post(string $path, array $query = [], array $headers = []): Response
+    /**
+     * Efetua requisição POST no client
+     * @param  string $path
+     * @param  array  $query
+     * @param  array  $headers
+     * @return ResponseInterface
+     */
+    protected function post(string $path, array $query = [], array $headers = []): ResponseInterface
     {
         $query = $this->getQueryForClientRequest($query);
         $headers = $this->getHeadersForClientRequest($headers);
 
         $options = array_merge(['form_params' => $query], $this->getClientOptions($headers));
-        $response = $this->client->request('POST', static::API_URL . $path, $options);
-        $responseContentType = $response->getHeaderLine('Content-Type');
-
-        if ($responseContentType !== 'application/json') {
-            throw new InvalidServiceResponseTypeException;
-        }
+        $response = $this->request('POST', static::API_URL . $path, $options);
 
         return $response;
     }
 
     /**
-     * [getHeadersForClientRequest description]
-     * @param  array  $headers [description]
-     * @return [type]          [description]
+     * Retorna os headers que serão utilizados
+     * nas requisições no cliente
+     * @param  array  $headers
+     * @return array  $headers
      */
-    public function getHeadersForClientRequest(array $headers = []): array
+    protected function getHeadersForClientRequest(array $headers = []): array
     {
-        $headers = array_merge($headers, $this->headers);
+        $headers = array_merge($headers, $this->defaultHeaders);
 
         return $headers;
     }
 
     /**
-     * [getQueryForClientRequest description]
-     * @param  array  $query [description]
-     * @return [type]        [description]
+     * Retorna array de dados que serão utilizados
+     * nas requisições no cliente
+     * @param  array  $query
+     * @return array  $query
      */
     protected function getQueryForClientRequest(array $query = []): array
     {
@@ -85,8 +114,9 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [getAuthData description]
-     * @return [type] [description]
+     * Retorna dados de autenticação
+     * para as requisições
+     * @return array
      */
     protected function getAuthData()
     {
@@ -97,10 +127,11 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [getClientOptions description]
-     * @param  array   $headers [description]
-     * @param  boolean $referer [description]
-     * @return [type]           [description]
+     * Retorna as opções da requisição para
+     * o cliente
+     * @param  array   $headers
+     * @param  boolean $referer
+     * @return array
      */
     protected function getClientOptions(array $headers, $referer = false): array
     {
@@ -108,6 +139,7 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
             'allow_redirects' => [
                 'referer' => $referer
             ],
+            'http_errors' => false,
             'timeout' => DeathByCaptcha::DEFAULT_TIMEOUT,
             'connect_timeout' => (DeathByCaptcha::DEFAULT_TIMEOUT / 4),
             'headers' => $headers
@@ -115,10 +147,11 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [callAccountApi description]
-     * @return [type] [description]
+     * Efetua requisição no cliente
+     * retornando informações da conta no serviço
+     * @return ResponseInterface
      */
-    public function accountRequest(): Response
+    public function accountRequest(): ResponseInterface
     {
         $response = $this->get('user');
 
@@ -126,10 +159,11 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [callStatusApi description]
-     * @return [type] [description]
+     * Efetua requisição no cliente
+     * retornando informações do status do serviço
+     * @return ResponseInterface
      */
-    public function statusRequest(): Response
+    public function statusRequest(): ResponseInterface
     {
         $response = $this->get('status');
 
@@ -137,10 +171,12 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [statusRequest description]
-     * @return [type] [description]
+     * Informa pro serviço que o captcha recuperado
+     * é inválido
+     * @param  int    $id
+     * @return ResponseInterface
      */
-    public function captchAsIncorrect(int $id): Response
+    public function captchAsIncorrect(int $id): ResponseInterface
     {
         $response = $this->post("captcha/{$id}/report");
 
@@ -148,11 +184,13 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [retrieveCaptcha description]
-     * @param  int    $id [description]
-     * @return [type]     [description]
+     * Recupera o resultado de um captcha através
+     * do ID recentemente retornado pelo método
+     * upload.
+     * @param  int    $id
+     * @return ResponseInterface
      */
-    public function retrieveCaptcha(int $id): Response
+    public function retrieveCaptcha(int $id): ResponseInterface
     {
         $response = $this->get("captcha/{$id}");
 
@@ -160,11 +198,11 @@ abstract class HttpDeathByCaptchaAbstract implements HttpClientInterface
     }
 
     /**
-     * [uploadCaptcha description]
-     * @param  [type] $imageBase64 [description]
-     * @return [type]              [description]
+     * Envia o captcha para o serviço
+     * @param  string $imageBase64
+     * @return ResponseInterface
      */
-    public function uploadCaptcha($imageBase64): Response
+    public function uploadCaptcha($imageBase64): ResponseInterface
     {
         $response = $this->post('captcha', [
             'captchafile' => $imageBase64

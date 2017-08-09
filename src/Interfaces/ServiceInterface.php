@@ -2,12 +2,34 @@
 
 namespace juniorb2ss\DeathByCaptcha\Interfaces;
 
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 interface ServiceInterface
 {
-    public function setResponse(Response $response);
+    /**
+     * Efetua o decode da resposta do serviço
+     * @param self $response
+     */
+    public function setResponse(ResponseInterface $response);
+
+    /**
+     * Retorna o resultado da requisição
+     * em modo array
+     * @return array
+     */
     public function toArray(): array;
-    public function getResponse(): \Stdclass;
-    public function getResponseAttribute($attribute);
+
+    /**
+     * Retorna resposta da requisição
+     * em modo de objeto
+     * @return StdClass
+     */
+    public function getResponse(): \StdClass;
+
+    /**
+     * Retorna atributo da resposta da requisição.
+     * @param  string $attribute
+     * @return mix
+     */
+    public function getResponseAttribute(string $attribute);
 }

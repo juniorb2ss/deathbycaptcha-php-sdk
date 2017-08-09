@@ -18,6 +18,14 @@ class ResolveServiceTest extends TestCase
         $this->assertExpectedApiResponse($response);
     }
 
+    /**
+     * @expectedException \juniorb2ss\DeathByCaptcha\Exceptions\InvalidCaptchaException
+     */
+    public function testUploaderBadCaptcha()
+    {
+        $this->service->resolver('bad image captcha');
+    }
+
     public function assertExpectedApiResponse(ResolverInterface $response)
     {
         $this->assertEquals((int)$this->expectedReturn['status'], $response->status());

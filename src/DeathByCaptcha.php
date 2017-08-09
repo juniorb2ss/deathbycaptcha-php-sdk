@@ -20,27 +20,26 @@ use juniorb2ss\DeathByCaptcha\Services\StatusService;
 class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptchaInterface
 {
     /**
-     *
+     * URL do serviço
      */
     const API_URL = 'http://api.dbcapi.me/api/';
 
     /**
-     *
+     * API Version
      */
     const API_VERSION = 'DBC/PHP v5';
 
     /**
-     *
+     * Request DEFAULT TIMEOUT
      */
     const DEFAULT_TIMEOUT = 60;
 
     /**
-     * [__construct description]
-     * @param string                $username [description]
-     * @param string                $password [description]
-     * @param ClientInterface|null  $client   [description]
-     * @param AccountInterface|null $account  [description]
-     * @param StatusInterface|null  $status   [description]
+     * @param string                $username
+     * @param string                $password
+     * @param ClientInterface|null  $client
+     * @param AccountInterface|null $account
+     * @param StatusInterface|null  $status
      */
     public function __construct(
         string $username,
@@ -63,10 +62,6 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
         return $this;
     }
 
-    /**
-     * [account description]
-     * @return [type] [description]
-     */
     public function account(): AccountInterface
     {
         $response = $this->accountRequest();
@@ -75,10 +70,6 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
                     ->setResponse($response);
     }
 
-    /**
-     * [status description]
-     * @return [type] [description]
-     */
     public function status(): StatusInterface
     {
         $response = $this->statusRequest();
@@ -87,10 +78,6 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
                     ->setResponse($response);
     }
 
-    /**
-     * [report description]
-     * @return [type] [description]
-     */
     public function report(int $id): ReportInterface
     {
         $response = $this->captchAsIncorrect($id);
@@ -99,18 +86,13 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
                     ->setResponse($response);
     }
 
-    /**
-     * [resolver description]
-     * @param  [type] $mix [description]
-     * @return [type]      [description]
-     */
-    public function resolver($mix): ResolverInterface
+    public function resolver($captcha): ResolverInterface
     {
         // If passed captcha id, retrieve captcha text
-        if (is_int($mix)) {
-            $response = $this->retrieveCaptcha($mix);
+        if (is_int($captcha)) {
+            $response = $this->retrieveCaptcha($captcha);
         } else {
-            $image = ImageService::base64From($mix);
+            $image = ImageService::base64From($captcha);
 
             $response = $this->uploadCaptcha($image);
         }
