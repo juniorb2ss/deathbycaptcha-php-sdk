@@ -1,7 +1,7 @@
 {
     "name": "juniorb2ss/deathbycaptcha-php-sdk",
     "description": "With Death by Captcha you can solve any CAPTCHA. All you need to do is implement our API, pass us your CAPTCHAs and we’ll return the text. It’s that easy!",
-    "type": "sdk, library",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
