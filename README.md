@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/juniorb2ss/deathbycaptcha-php-sdk.svg?branch=master)](https://travis-ci.org/juniorb2ss/deathbycaptcha-php-sdk) [![Code Coverage](https://scrutinizer-ci.com/g/juniorb2ss/deathbycaptcha-php-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/juniorb2ss/deathbycaptcha-php-sdk/?branch=master) [![Laravel](https://img.shields.io/badge/Laravel-5.*-green.svg)](https://laravel.com) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/juniorb2ss/deathbycaptcha-php-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/juniorb2ss/deathbycaptcha-php-sdk/?branch=master) [![StyleCI](https://styleci.io/repos/99608750/shield?branch=master)](https://styleci.io/repos/84957945) [![Code Climate](https://codeclimate.com/github/juniorb2ss/deathbycaptcha-php-sdk/badges/gpa.svg)](https://codeclimate.com/github/juniorb2ss/deathbycaptcha-php-sdk)
 
-##CAPTCHA Bypass done right
+## CAPTCHA Bypass done right
 
 With Death by Captcha you can solve any CAPTCHA. All you need to do is implement our API, pass us your CAPTCHAs and we’ll return the text. It’s that easy!
 
