@@ -48,6 +48,9 @@ abstract class HttpHandlerResponseAbstract
                 break;
             case 500:
                 throw new InternalServiceException;
+            case 501:
+                throw new InvalidCaptchaException;
+                break;
             case 503:
                 throw new ServiceOverloadException;
                 break;

@@ -85,6 +85,20 @@ class ExceptionsTest extends TestCase
     }
 
     /**
+     * @expectedException juniorb2ss\DeathByCaptcha\Exceptions\InvalidCaptchaException
+     */
+    public function testInvalidCaptchaExceptionWith501()
+    {
+        $service = $this->mock('{}', function (ResponseInterface $response) {
+            return $response->withStatus(501);
+        });
+
+        $captchaPath = dirname(__FILE__) . '/../stubs/captcha.png';
+
+        $service->resolver((string) $captchaPath);
+    }
+
+    /**
      * @expectedException juniorb2ss\DeathByCaptcha\Exceptions\InternalServiceException
      */
     public function testInternalServiceException()

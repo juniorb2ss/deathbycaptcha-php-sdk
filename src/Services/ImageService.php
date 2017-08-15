@@ -12,9 +12,10 @@ class ImageService implements ImageInterface
     public static function base64From(string $content): string
     {
         try {
-            $image = Image::make($content);
+            $img = Image::make($content)->encode('data-url');
+            $base64 = substr($img->encoded, 22);
 
-            return (string)$image->encode();
+            return 'base64:' . $base64;
         } catch (ImageException $e) {
             throw new InvalidCaptchaException;
         }
