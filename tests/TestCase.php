@@ -49,7 +49,7 @@ abstract class TestCase extends BaseTestCase
     protected function clientMock(string $body, callable $handlerResponse = null)
     {
         $response = new MockHandler([
-            new GuzzleResponse(200, ['Content-Type' => 'application/json'], $body)
+            new GuzzleResponse(200, ['Content-Type' => 'application/json; charset=utf8'], $body)
         ]);
 
         $handlerStack = HandlerStack::create($response);

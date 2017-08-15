@@ -85,6 +85,18 @@ class ExceptionsTest extends TestCase
     }
 
     /**
+     * @expectedException juniorb2ss\DeathByCaptcha\Exceptions\InternalServiceException
+     */
+    public function testInternalServiceException()
+    {
+        $service = $this->mock('{}', function (ResponseInterface $response) {
+            return $response->withStatus(500);
+        });
+
+        $service->account();
+    }
+
+    /**
      * @expectedException juniorb2ss\DeathByCaptcha\Exceptions\ServiceOverloadException
      */
     public function testServiceOverloadException()

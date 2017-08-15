@@ -5,6 +5,7 @@ namespace juniorb2ss\DeathByCaptcha\Abstracts;
 use Psr\Http\Message\ResponseInterface;
 use juniorb2ss\DeathByCaptcha\Exceptions\AccessDeniedException;
 use juniorb2ss\DeathByCaptcha\Exceptions\CaptchaNotFoundException;
+use juniorb2ss\DeathByCaptcha\Exceptions\InternalServiceException;
 use juniorb2ss\DeathByCaptcha\Exceptions\InvalidCaptchaException;
 use juniorb2ss\DeathByCaptcha\Exceptions\InvalidServiceResponseException;
 use juniorb2ss\DeathByCaptcha\Exceptions\ServiceOverloadException;
@@ -17,7 +18,7 @@ abstract class HttpHandlerResponseAbstract
      * do serviço
      * @var string
      */
-    protected $contentTypeOk = 'application/json';
+    protected $contentTypeOk = 'application/json; charset=utf8';
 
     /**
      * Executa verificação da integridade da resposta
@@ -28,17 +29,6 @@ abstract class HttpHandlerResponseAbstract
     {
         $response = $this->response;
         $contentType = $response->getHeaderLine('Content-Type');
-
-        // Uma coisa básica é verificar o tipo do conteúdo
-        // da resposta HTTP.
-        // Parece a principio algo meio "desnecessário"
-        // já que se a resposta for ok e for passado o
-        // accept de json, técnicamente deverá retornar
-        // o content type como json
-        // mas... nunca se sabe, né?
-        if (($contentType !== $this->contentTypeOk) or (empty((string)$response->getBody()))) {
-            throw new InvalidServiceResponseException;
-        }
 
         $statusCode = $response->getStatusCode();
 
@@ -56,9 +46,22 @@ abstract class HttpHandlerResponseAbstract
             case 413:
                 throw new InvalidCaptchaException;
                 break;
+            case 500:
+                throw new InternalServiceException;
             case 503:
                 throw new ServiceOverloadException;
                 break;
+        }
+
+        // Uma coisa básica é verificar o tipo do conteúdo
+        // da resposta HTTP.
+        // Parece a principio algo meio "desnecessário"
+        // já que se a resposta for ok e for passado o
+        // accept de json, técnicamente deverá retornar
+        // o content type como json
+        // mas... nunca se sabe, né?
+        if (($contentType !== $this->contentTypeOk) or (empty((string)$response->getBody()))) {
+            throw new InvalidServiceResponseException;
         }
     }
 }
