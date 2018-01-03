@@ -9,12 +9,12 @@ use juniorb2ss\DeathByCaptcha\Abstracts\HttpDeathByCaptchaAbstract;
 use juniorb2ss\DeathByCaptcha\Interfaces\AccountInterface;
 use juniorb2ss\DeathByCaptcha\Interfaces\DeathByCaptchaInterface;
 use juniorb2ss\DeathByCaptcha\Interfaces\ReportInterface;
-use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolveInterface;
 use juniorb2ss\DeathByCaptcha\Interfaces\StatusInterface;
 use juniorb2ss\DeathByCaptcha\Services\AccountService;
 use juniorb2ss\DeathByCaptcha\Services\ImageService;
 use juniorb2ss\DeathByCaptcha\Services\ReportService;
-use juniorb2ss\DeathByCaptcha\Services\ResolverService;
+use juniorb2ss\DeathByCaptcha\Services\ResolveService;
 use juniorb2ss\DeathByCaptcha\Services\StatusService;
 
 class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptchaInterface
@@ -52,7 +52,7 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
         $this->account = new AccountService;
         $this->status = new StatusService;
         $this->report = new ReportService;
-        $this->resolver = new ResolverService;
+        $this->resolve = new ResolveService;
     }
 
     public function setHttpClient(ClientInterface $client)
@@ -86,7 +86,7 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
                     ->setResponse($response);
     }
 
-    public function resolver($captcha): ResolverInterface
+    public function resolve($captcha): ResolveInterface
     {
         // If passed captcha id, retrieve captcha text
         if (is_int($captcha)) {
@@ -97,11 +97,11 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
             $response = $this->uploadCaptcha($image);
         }
 
-        return $this->resolver
+        return $this->resolve
                     ->setResponse($response);
     }
 
-    public function resolverV2(string $mix, string $url = null): ResolverInterface
+    public function resolveV2(string $mix, string $url = null): ResolveInterface
     {
         if (is_null($url)) {
             $response = $this->retrieveCaptcha($mix);
@@ -109,7 +109,7 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
             $response = $this->sendReCaptchaV2($mix, $url);
         }
 
-        return $this->resolver
+        return $this->resolve
                     ->setResponse($response);
     }
 }

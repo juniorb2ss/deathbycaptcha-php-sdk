@@ -4,7 +4,7 @@ namespace juniorb2ss\DeathByCaptcha\Interfaces;
 
 use juniorb2ss\DeathByCaptcha\Interfaces\StatusInterface;
 use juniorb2ss\DeathByCaptcha\Interfaces\AccountInterface;
-use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolveInterface;
 
 interface DeathByCaptchaInterface
 {
@@ -24,18 +24,18 @@ interface DeathByCaptchaInterface
      * Envia o captcha pro serviço ou recupera o resultado
      * de um captcha previamente enviado
      * @param  $mix $captcha ID do captcha ou imagem
-     * @return ResolverInterface
+     * @return ResolveInterface
      */
-    public function resolver($mix): ResolverInterface;
+    public function resolve($mix): ResolveInterface;
 
     /**
      * Envia o captcha pro serviço ou recupera o resultado
      * de um captcha previamente enviado
      * @param  $mix $captcha ID do captcha or site-key
      * @param  $url $url url
-     * @return ResolverInterface
+     * @return ResolveInterface
      */
-    public function resolverV2(string $mix, string $url = null): ResolverInterface;
+    public function resolveV2(string $mix, string $url = null): ResolveInterface;
 
     /**
      * Informa ao serviço que o captcha recuperado

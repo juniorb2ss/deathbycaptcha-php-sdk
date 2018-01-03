@@ -2,7 +2,7 @@
 
 namespace juniorb2ss\DeathByCaptcha\Tests\Services;
 
-use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolveInterface;
 use juniorb2ss\DeathByCaptcha\Tests\TestCase;
 
 class ResolveServiceReCaptchaV2Test extends TestCase
@@ -14,12 +14,12 @@ class ResolveServiceReCaptchaV2Test extends TestCase
         $sitekey = 'randomstring';
         $url = 'random-url';
 
-        $response = $this->service->resolverV2($sitekey, $url);
+        $response = $this->service->resolveV2($sitekey, $url);
 
         $this->assertExpectedApiResponse($response);
     }
 
-    public function assertExpectedApiResponse(ResolverInterface $response)
+    public function assertExpectedApiResponse(ResolveInterface $response)
     {
         $this->assertEquals((int)$this->expectedReturn['status'], $response->status());
         $this->assertEquals((int)$this->expectedReturn['captcha'], $response->captchaId());
@@ -30,7 +30,7 @@ class ResolveServiceReCaptchaV2Test extends TestCase
     {
         $id = $this->expectedReturn['captcha'];
 
-        $response = $this->service->resolverV2((int) $id);
+        $response = $this->service->resolveV2((int) $id);
 
         $this->assertExpectedApiResponse($response);
 

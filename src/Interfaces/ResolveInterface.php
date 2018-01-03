@@ -2,7 +2,7 @@
 
 namespace juniorb2ss\DeathByCaptcha\Interfaces;
 
-interface ResolverInterface
+interface ResolveInterface
 {
     /**
      * Retorna o ID do captcha

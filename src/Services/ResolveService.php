@@ -4,9 +4,9 @@ namespace juniorb2ss\DeathByCaptcha\Services;
 
 use GuzzleHttp\Psr7\Response;
 use juniorb2ss\DeathByCaptcha\Abstracts\ServiceAbstract;
-use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolveInterface;
 
-class ResolverService extends ServiceAbstract implements ResolverInterface
+class ResolveService extends ServiceAbstract implements ResolveInterface
 {
     public function isCorrect(): bool
     {

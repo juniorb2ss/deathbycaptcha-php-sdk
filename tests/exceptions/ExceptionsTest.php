@@ -53,7 +53,7 @@ class ExceptionsTest extends TestCase
             return $response->withStatus(404);
         });
 
-        $service->resolver((int) 1);
+        $service->resolve((int) 1);
     }
 
     /**
@@ -67,7 +67,7 @@ class ExceptionsTest extends TestCase
 
         $captchaPath = dirname(__FILE__) . '/../stubs/captcha.png';
 
-        $service->resolver((string) $captchaPath);
+        $service->resolve((string) $captchaPath);
     }
 
     /**
@@ -81,7 +81,7 @@ class ExceptionsTest extends TestCase
 
         $captchaPath = dirname(__FILE__) . '/../stubs/captcha.png';
 
-        $service->resolver((string) $captchaPath);
+        $service->resolve((string) $captchaPath);
     }
 
     /**
@@ -95,7 +95,7 @@ class ExceptionsTest extends TestCase
 
         $captchaPath = dirname(__FILE__) . '/../stubs/captcha.png';
 
-        $service->resolver((string) $captchaPath);
+        $service->resolve((string) $captchaPath);
     }
 
     /**

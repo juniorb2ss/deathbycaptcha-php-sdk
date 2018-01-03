@@ -2,7 +2,7 @@
 
 namespace juniorb2ss\DeathByCaptcha\Tests\Services;
 
-use juniorb2ss\DeathByCaptcha\Interfaces\ResolverInterface;
+use juniorb2ss\DeathByCaptcha\Interfaces\ResolveInterface;
 use juniorb2ss\DeathByCaptcha\Tests\TestCase;
 
 class ResolveServiceTest extends TestCase
@@ -13,7 +13,7 @@ class ResolveServiceTest extends TestCase
     {
         $captchaPath = dirname(__FILE__) . '/../stubs/captcha.png';
 
-        $response = $this->service->resolver((string) $captchaPath);
+        $response = $this->service->resolve((string) $captchaPath);
 
         $this->assertExpectedApiResponse($response);
     }
@@ -23,10 +23,10 @@ class ResolveServiceTest extends TestCase
      */
     public function testUploaderBadCaptcha()
     {
-        $this->service->resolver('bad image captcha');
+        $this->service->resolve('bad image captcha');
     }
 
-    public function assertExpectedApiResponse(ResolverInterface $response)
+    public function assertExpectedApiResponse(ResolveInterface $response)
     {
         $this->assertEquals((int)$this->expectedReturn['status'], $response->status());
         $this->assertEquals((int)$this->expectedReturn['captcha'], $response->captchaId());
@@ -37,7 +37,7 @@ class ResolveServiceTest extends TestCase
     {
         $id = $this->expectedReturn['captcha'];
 
-        $response = $this->service->resolver((int) $id);
+        $response = $this->service->resolve((int) $id);
 
         $this->assertExpectedApiResponse($response);
 
