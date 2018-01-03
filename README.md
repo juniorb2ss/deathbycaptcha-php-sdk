@@ -23,25 +23,28 @@ $ composer require juniorb2ss/deathbycaptcha-php-sdk~1.*
 use juniorb2ss\DeathByCaptcha\DeathByCaptcha;
 
 // You need first register and buy credits in http://www.deathbycaptcha.com
-$dtc = new DeathByCaptcha('yourUsername', 'yourPassword');
+$dbc = new DeathByCaptcha('yourUsername', 'yourPassword');
 
 // To retrieve service status
-$serviceStatus = $dtc->status();
+$serviceStatus = $dbc->status();
 
 // To get user informations
-$user = $dtc->account();
+$user = $dbc->account();
 
 echo 'My Credits: ' . $user->getBalance(); //1232.2881
 
 // you can pass: path image, base64, image link
-$captcha = $dtc->resolve('captcha.jpg');
+$captcha = $dbc->resolve('captcha.jpg');
+
+// supports recaptcha v2
+// $captcha = $dbc->resolveV2($googleKey, $webUrl);
 
 // This is captcha ID in service, you need call resolve method with this ID seconds later.
-$captchaId = $dtc->captchaId();
+$captchaId = $dbc->captchaId();
 
 // make a simple loop or just sleep
 // sleep(7);
-$captchaText = $dtc->resolve((int) $captchaId) // return captcha text for human
+$captchaText = $dbc->resolve((int) $captchaId) // return captcha text for human
 ```
 
 ## Tests
