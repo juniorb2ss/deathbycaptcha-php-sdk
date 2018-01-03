@@ -210,4 +210,24 @@ abstract class HttpDeathByCaptchaAbstract extends HttpHandlerResponseAbstract im
 
         return $response;
     }
+
+    /**
+     * Envia o captcha para o serviço
+     * @param  string $googlekey
+     * @param  $url
+     * @return ResponseInterface
+     */
+    public function sendReCaptchaV2($googlekey, $url)
+    {
+        $response = $this->post('captcha', [
+            'type' => 4,
+            'token_params' => json_encode([
+                'proxytype' => 'HTTP',
+                'googlekey' => $googlekey,
+                'pageurl' => $url,
+            ])
+        ]);
+
+        return $response;
+    }
 }

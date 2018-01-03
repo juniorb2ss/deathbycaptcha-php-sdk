@@ -29,6 +29,15 @@ interface DeathByCaptchaInterface
     public function resolver($mix): ResolverInterface;
 
     /**
+     * Envia o captcha pro serviço ou recupera o resultado
+     * de um captcha previamente enviado
+     * @param  $mix $captcha ID do captcha or site-key
+     * @param  $url $url url
+     * @return ResolverInterface
+     */
+    public function resolverV2(string $mix, string $url = null): ResolverInterface;
+
+    /**
      * Informa ao serviço que o captcha recuperado
      * é inválido.
      * @param  int    $id

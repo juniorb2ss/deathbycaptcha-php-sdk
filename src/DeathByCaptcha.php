@@ -100,4 +100,16 @@ class DeathByCaptcha extends HttpDeathByCaptchaAbstract implements DeathByCaptch
         return $this->resolver
                     ->setResponse($response);
     }
+
+    public function resolverV2(string $mix, string $url = null): ResolverInterface
+    {
+        if (is_null($url)) {
+            $response = $this->retrieveCaptcha($mix);
+        } else {
+            $response = $this->sendReCaptchaV2($mix, $url);
+        }
+
+        return $this->resolver
+                    ->setResponse($response);
+    }
 }
